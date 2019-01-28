@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 회원 처리 SQL -->
+<mapper namespace="com.scit.SimpleMarket.DAO.MemberMapper"> <!-- 인터페이스의 경로 -->
+	<!-- 관리자 로그인 -->
+	<select id="loginAdmin" parameterType="Member" resultType="Member">
+		SELECT
+			ADMINID,
+			ADMINPW
+		FROM
+			ADMIN
+		WHERE
+			ADMINID=#{adminId}
+			AND
+			ADMINPW=#{adminPw}
+	</select>
+	
+	<!-- 사용자 회원가입 -->
+	<insert id="insertMemeber" parameterType="Member">
+		INSERT INTO CLIENT
+		(
+			CUSTOMERID,
+    		CUSTOMERPW,
+    		NAME,
+    		PHONE,
+    		BIRTHDATE,
+    		ADDRESS,
+    		INDATE
+		)
+		VALUES
+		(
+			#{customerId},
+			#{customerPw},
+			#{name},
+			#{phone},
+			#{birthdate},
+			#{address},
+			sysdate
+		)
+	</insert>
+	
+	<!-- 사용자 로그인 -->
+	<select id="loginMember" parameterType="Member" resultType="Member">
+		SELECT
+			CUSTOMERID,
+			CUSTOMERPW
+		FROM
+			CLIENT
+		WHERE
+			CUSTOMERID=#{customerId}
+		AND
+			CUSTOMERPW=#{customerPw}
+	</select>
+	
+	<select id="selectCustomerList" resultType="Member">
+		SELECT
+			CUSTOMERID,
+    		CUSTOMERPW,
+    		NAME,
+    		PHONE,
+    		BIRTHDATE,
+    		ADDRESS,
+    		INDATE
+    	FROM
+    		CLIENT
+	</select>
+</mapper>
+   

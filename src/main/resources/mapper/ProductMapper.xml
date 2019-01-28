@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- 상품 처리 SQL -->
+<mapper namespace="com.scit.SimpleMarket.DAO.ProductMapper"> <!-- 인터페이스의 경로 -->
+
+	<!-- 상품등록 -->
+	<insert id="insertProduct" parameterType="Product">
+		INSERT INTO PRODUCT
+		(
+			PRODUCTSEQ,
+			NAME,
+			QUANTITY,
+			PRICE,
+			COMMENTS,
+			INDATE
+		)
+		VALUES
+		(
+			PRODUCTSEQ.NEXTVAL,
+			#{name},
+			#{quantity},
+			#{price},
+			#{comments},
+			sysdate
+		)
+	</insert>
+	
+	<!-- 상품 전체리스트 가져오기 -->
+	<select id="selectProductListAll" resultType="Product">
+		SELECT
+			PRODUCTSEQ,
+			NAME,
+			QUANTITY,
+			PRICE,
+			COMMENTS,
+			INDATE
+		FROM
+			PRODUCT
+		ORDER BY INDATE
+	</select>
+	<!-- 상품 상세보기 -->
+	<select id="selectProductDetail" parameterType="String" resultType="Product">
+		SELECT
+			PRODUCTSEQ,
+			NAME,
+			QUANTITY,
+			PRICE,
+			COMMENTS,
+			INDATE
+		FROM
+			PRODUCT
+		WHERE
+			PRODUCTSEQ=#{productSeq}
+	</select>
+	<!-- 상품 수정 -->
+	<update id="updateProduct" parameterType="Product">
+		UPDATE
+			PRODUCT
+		SET
+			
+				NAME=#{name},
+				QUANTITY=#{quantity},
+				PRICE=#{price},
+				COMMENTS=#{comments},
+				INDATE=sysdate
+			
+		WHERE
+			PRODUCTSEQ=#{productSeq}
+			
+	</update>
+	<!-- 상품 구입 -->
+	<insert id="insertSold" parameterType="Product">
+		INSERT INTO SOLD
+		(
+			SOLDSEQ,
+			CUSTOMERID,
+			PRODUCTSEQ,
+			INDATE,
+			QUANTITY
+		)
+		VALUES
+		(
+			SOLDSEQ.NEXTVAL,
+			#{customerId},
+			#{productSeq},
+			sysdate,
+			#{quantity}
+		)
+	</insert>
+	<!-- 상품 구입후 재고 수정 -->
+	<update id="updateProductQuantity" parameterType="Product">
+		UPDATE
+			PRODUCT
+		SET
+				QUANTITY=QUANTITY-#{quantity}
+		WHERE
+			PRODUCTSEQ=#{productSeq}
+	</update>
+	
+	<!-- 물품 재고 확인 -->
+	<select id="checkQuantity" parameterType="String" resultType="int">
+		SELECT
+			QUANTITY
+		FROM
+			PRODUCT
+		WHERE
+			PRODUCTSEQ=#{productSeq}
+	</select>
+	
+	<!-- 구매 내역-->
+	<select id="selectPurchaseList" parameterType="String" resultType="Hmap">
+		SELECT
+			P.NAME AS NAME,
+			P.PRICE AS PRICE,
+			P.COMMENTS AS COMMENTS,
+			S.INDATE AS INDATE,
+			S.QUANTITY AS QUANTITY,
+			P.PRICE * S.QUANTITY AS PRICEALL
+		FROM
+			SOLD S,
+			PRODUCT P
+		WHERE
+			S.PRODUCTSEQ = P.PRODUCTSEQ
+			AND
+			S.CUSTOMERID=#{customerId} 
+	</select>
+</mapper>
