@@ -22,13 +22,23 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.scit.SimpleMarket" />
-	
-	<beans:bean id="purchaseProduct" class="com.scit.SimpleMarket.Interceptor.buyProductInterceptor"></beans:bean> <!-- 시험에 나온다. -->
+	<!-- 물품 구입시 재고량보다 클때 -->
+	<beans:bean id="purchaseProduct" class="com.scit.SimpleMarket.Interceptor.buyProductInterceptor"></beans:bean>
 	<interceptors>
 		<interceptor>
 			<mapping path="/buyProduct"/>
+			<!-- <mapping path="/admin/*"/> -->
 			<beans:ref bean="purchaseProduct"/>
 		</interceptor>
 	</interceptors>
 	
+	<!-- 로그인 -->
+	<beans:bean id="memberlogin" class="com.scit.SimpleMarket.Interceptor.LoginInterceptor"></beans:bean>
+	<interceptors>
+		<interceptor>
+			<mapping path="/productList"/>
+			<mapping path="/purchaseList"/>
+			<beans:ref bean="memberlogin"/>
+		</interceptor>
+	</interceptors>
 </beans:beans>

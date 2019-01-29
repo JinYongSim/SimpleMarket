@@ -89,9 +89,6 @@ public class ProductController {
 	public String purchaseList(String customerId, Model model) {
 		ArrayList<HashMap<String,Object>> hMap = null;
 		hMap = dao.selectPurchaseList(customerId);
-		for (HashMap<String, Object> hashMap : hMap) {
-			System.out.println(hashMap.get("NAME"));
-		}
 		model.addAttribute("hMap", hMap);
 		return "member/purchaseList";
 	}
