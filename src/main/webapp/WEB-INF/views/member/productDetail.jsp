@@ -12,6 +12,9 @@
 </script>
 </head>
 <body>
+	<form action="memberMain">
+		<input type="submit" value="돌아가기">
+	</form>
 	<table>
 		<tr>
 			<td>상품명 : ${product.name }</td>

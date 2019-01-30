@@ -3,6 +3,8 @@ package com.scit.SimpleMarket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +64,7 @@ public class ProductController {
 	}
 	// 회원이 보는 상품목록
 	@RequestMapping(value="/productList", method=RequestMethod.GET)
-	public String productList(Model model) {
+	public String productList(Model model,HttpSession session) {
 		productListAll(model);
 		return "member/product";
 	}
@@ -86,9 +88,9 @@ public class ProductController {
 		return "redirect:/productList";
 	}
 	@RequestMapping(value="/purchaseList", method=RequestMethod.GET)
-	public String purchaseList(String customerId, Model model) {
-		ArrayList<HashMap<String,Object>> hMap = null;
-		hMap = dao.selectPurchaseList(customerId);
+	public String purchaseList(Model model, HttpSession session) {
+		ArrayList<HashMap<String,Object>> hMap = null;		
+		hMap = dao.selectPurchaseList((String)session.getAttribute("loginId"));
 		model.addAttribute("hMap", hMap);
 		return "member/purchaseList";
 	}

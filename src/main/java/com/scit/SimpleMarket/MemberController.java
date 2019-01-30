@@ -58,11 +58,16 @@ public class MemberController {
 	public String loginMember(Member member, HttpSession session) {
 		Member lMember = null;
 		lMember = dao.loginMember(member);
+		String dest = (String)session.getAttribute("dest");
+		String[] arr = dest.split("/");
+		String str = arr[arr.length-1];
 		if(lMember == null) {
 			return "redirect:/login";
 		}
+		//TODO 구매내역과 같이 파라미터를 받는거면 다른게 처리해야한다.
 		session.setAttribute("loginId", lMember.getCustomerId());
-		return "member/memberMain";
+		System.out.println(str);
+		return "redirect:/"+str;
 	}
 	@RequestMapping(value="/logout", method=RequestMethod.GET)
 	public String logout(HttpSession session) {

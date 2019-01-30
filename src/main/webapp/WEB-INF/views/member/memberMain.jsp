@@ -25,7 +25,6 @@
 		<input type="submit" value="상품보기">
 	</form>
 	<form action="purchaseList">
-		<input type="hidden" name="customerId" value="${sessionScope.loginId}">
 		<input type="submit" value="구매내역">
 	</form>
 	
