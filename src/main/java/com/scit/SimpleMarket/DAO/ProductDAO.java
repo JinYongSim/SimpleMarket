@@ -3,10 +3,12 @@ package com.scit.SimpleMarket.DAO;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.scit.SimpleMarket.PageNavigator.PageNavigator;
 import com.scit.SimpleMarket.VO.Product;
 
 @Repository
@@ -27,12 +29,13 @@ public class ProductDAO {
 		return result;
 	}
 	// 상품 전체리스트 가져오기
-	public ArrayList<Product> selectProductListAll(){
+	public ArrayList<Product> selectProductListAll(PageNavigator pn,String search){
 		ArrayList<Product> list = null;
+		RowBounds rb=new RowBounds(pn.getStartBoardPage(),pn.getBoardPerPage()); // startBoardPage 현재페이지의 첫글 위치
 		ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
 		
 		try {
-			list = mapper.selectProductListAll();
+			list = mapper.selectProductListAll(rb,search);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("상품 전체리스트 가져오기 에러");
@@ -106,5 +109,17 @@ public class ProductDAO {
 			System.out.println("구매 목록 에러");
 		}
 		return hMap;
+	}
+	
+	public int productCount(String search) {
+		int result = 0;
+		ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
+		try {
+			result = mapper.productCount(search);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("제품 개수 에러");
+		}
+		return result;
 	}
 }

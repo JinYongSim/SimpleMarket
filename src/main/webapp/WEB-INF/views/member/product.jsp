@@ -6,6 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript">
+function submitForm(page){
+	document.getElementById("page").value=page;
+	document.getElementById("myForm").submit();
+}
+</script>
 </head>
 <body>
 	<form action="memberMain">
@@ -29,5 +35,24 @@
 			</tr>
 		</c:forEach>
 	</table>
+	<a href="javascript:submitForm('${navi.currentPage-1}')">이전페이지</a>
+	<c:forEach var="page" begin="${navi.startPageGroup}" end="${navi.endPageGroup}">
+	
+	<c:if test="${navi.currentPage==page}">
+	&nbsp;<a href="javascript:submitForm('${page}')"><b>${page}</b></a>&nbsp;
+	</c:if>
+	
+	<c:if test="${navi.currentPage!=page}">
+	&nbsp;<a href="javascript:submitForm('${page}')">${page}</a>&nbsp;
+	</c:if>
+	
+	</c:forEach>
+	<a href="javascript:submitForm('${navi.currentPage+1}')">다음페이지</a>
+	
+	<form action="productList" id="myForm">
+		<input type="hidden" name="page" id="page" value="${navi.currentPage}">
+		검색 : <input type="text" name="search" id="search" value="${search }">
+		<input type="submit" value="검색">
+	</form>
 </body>
 </html>

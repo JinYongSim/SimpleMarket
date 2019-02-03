@@ -29,7 +29,7 @@
 	</insert>
 	
 	<!-- 상품 전체리스트 가져오기 -->
-	<select id="selectProductListAll" resultType="Product">
+	<select id="selectProductListAll" resultType="Product" parameterType="String">
 		SELECT
 			PRODUCTSEQ,
 			NAME,
@@ -39,6 +39,10 @@
 			INDATE
 		FROM
 			PRODUCT
+		<if test="_parameter!=null">
+		WHERE
+			NAME LIKE '%'||#{_parameter}||'%'
+		</if>
 		ORDER BY INDATE
 	</select>
 	<!-- 상품 상세보기 -->
@@ -126,5 +130,15 @@
 			S.PRODUCTSEQ = P.PRODUCTSEQ
 			AND
 			S.CUSTOMERID=#{customerId} 
+	</select>
+	<select id="productCount" resultType="int" parameterType="String">
+		SELECT
+			COUNT(PRODUCTSEQ)
+		FROM
+			PRODUCT
+		<if test="_parameter!=null">
+		WHERE
+			NAME LIKE '%'||#{_parameter}||'%'
+		</if>
 	</select>
 </mapper>

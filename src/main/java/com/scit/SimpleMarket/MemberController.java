@@ -59,6 +59,10 @@ public class MemberController {
 		Member lMember = null;
 		lMember = dao.loginMember(member);
 		String dest = (String)session.getAttribute("dest");
+		if(dest == null) {
+			session.setAttribute("loginId", lMember.getCustomerId());
+			return "member/memberMain";
+		}
 		String[] arr = dest.split("/");
 		String str = arr[arr.length-1];
 		if(lMember == null) {

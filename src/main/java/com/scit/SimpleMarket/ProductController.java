@@ -10,25 +10,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.scit.SimpleMarket.DAO.ProductDAO;
+import com.scit.SimpleMarket.PageNavigator.PageNavigator;
 import com.scit.SimpleMarket.VO.Product;
 
 @Controller
 public class ProductController {
 	@Autowired
 	ProductDAO dao;
-	
+	private int boardPerPage = 3; // 페이지당 글의 갯수
+	private int pagePerGroup = 3; // 페이지그룹 당 페이지의 갯수
 	// 관리자 메인 페이지
-	@RequestMapping(value="/adminMain", method=RequestMethod.GET)
-	public String adminMain(Model model) {
-		productListAll(model);
-		return "admin/adminMain";
-	}
+//	@RequestMapping(value="/adminMain", method=RequestMethod.GET)
+//	public String adminMain(Model model) {
+//		productListAll(model);
+//		return "admin/adminMain";
+//	}
 	// 상품목록 출력 메소드
-	public void productListAll(Model model) {
+	public void productListAll(Model model, PageNavigator pn,String search) {
 		ArrayList<Product> list = null;
-		list = dao.selectProductListAll();
+		list = dao.selectProductListAll(pn,search);
 		model.addAttribute("list",list);
 	}
 	// 상품등록페이지로 이동
@@ -64,8 +67,14 @@ public class ProductController {
 	}
 	// 회원이 보는 상품목록
 	@RequestMapping(value="/productList", method=RequestMethod.GET)
-	public String productList(Model model,HttpSession session) {
-		productListAll(model);
+	public String productList(Model model,HttpSession session,
+			@RequestParam(value="page",defaultValue="1") int page,
+			@RequestParam(value="search",defaultValue="") String search) {
+		int totalRecord = dao.productCount(search);
+		PageNavigator pn = new PageNavigator(boardPerPage, pagePerGroup, page, totalRecord);
+		productListAll(model,pn,search);
+		model.addAttribute("navi",pn);
+		model.addAttribute("search", search);
 		return "member/product";
 	}
 	// 상품 자세히 보기 메소드
